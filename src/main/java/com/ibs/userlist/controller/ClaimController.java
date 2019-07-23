@@ -2,11 +2,9 @@ package com.ibs.userlist.controller;
 
 import com.ibs.userlist.exceptions.NotFoundException;
 import com.ibs.userlist.model.Claim;
-import jdk.nashorn.internal.runtime.options.Options;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ibs.userlist.service.ClaimService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +14,8 @@ import java.util.Optional;
 @RequestMapping("claim")
 public class ClaimController {
 
+    private final ClaimService claimService;
+
     private List<Claim> claimList = Arrays.asList(
             new Claim(1, "Jack", "Frank", true),
             new Claim(2, "John", "Mike", false),
@@ -23,14 +23,35 @@ public class ClaimController {
             new Claim(4, "Razor", "Rich", false)
     );
 
+    @Autowired
+    public ClaimController(ClaimService claimService) {
+        this.claimService = claimService;
+    }
+
+
     @GetMapping
     public List<Claim> claim() {
         return claimList;
     }
 
     @GetMapping("{id}")
-    public Claim getOne(@PathVariable int id) {
-        return Optional.of(claimList.get(id)).orElseThrow(NotFoundException::new);
+    public Claim getClaim(@PathVariable String id) {
+        return Optional.of(claimList.get(Integer.parseInt(id))).orElseThrow(NotFoundException::new);
     }
 
+    @PostMapping
+    public void create(@RequestBody Claim claim) {
+        claimService.create(claim);
+    }
+
+    @PutMapping
+    public void update(@PathVariable String id, @RequestBody Claim claim) {
+        Claim dbClaim = getClaim(id);
+        claimService.update(claim);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteBook(@PathVariable Integer id) {
+        claimService.deleteById(id);
+    }
 }
