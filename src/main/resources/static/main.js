@@ -54,7 +54,8 @@ const app = new Vue({
         async downloadClaims() {
             try {
                 let response = await axios.get('/claim');
-                response.data.forEach(claim => this.claims.push(claim))
+                console.log(response.data);
+                // response.data.forEach(claim => this.claims.push(claim))
             } catch (error) {
                 snack.errorMessage(error)
             }
