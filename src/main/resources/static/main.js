@@ -10,8 +10,8 @@ const app = new Vue({
                 value: 'id'
             },
             { text: 'Наименование', value: 'name' },
-            { text: 'Кому', value: 'whom' },
-            { text: 'От кого', value: 'fwhom' },
+            { text: 'Кому', value: 'to' },
+            { text: 'От кого', value: 'from' },
             { text: 'Статус', value: 'status' },
             { text: 'Actions', value: 'name', sortable: false }
         ],
@@ -20,18 +20,35 @@ const app = new Vue({
         editedIndex: -1,
         editedItem: {
             id: '',
-            name: 0,
-            whom: 0,
-            fwhom: 0,
-            status: false
+            name: '',
+            to: '',
+            from: '',
+            status: ''
         },
         defaultItem: {
             id: '',
+            name: '',
+            to: '',
+            from: '',
+            status: ''
+        },
+
+        responseClaim: {
+            id: '',
             name: 0,
-            whom: 0,
-            fwhom: 0,
-            status: false
-        }
+            claimFrom: {
+                id: 0,
+                name: ''
+            },
+            claimTo: {
+                id: 0,
+                name: ''
+            },
+            claimStatus: {
+                id: 0,
+                name: ''
+            }
+        },
     }),
 
     computed: {
@@ -47,17 +64,25 @@ const app = new Vue({
     },
 
     created () {
-        this.initialize()
+        // this.initialize()
     },
 
     methods: {
         async downloadClaims() {
             try {
                 let response = await axios.get('/claim');
-                console.log(response.data);
-                // response.data.forEach(claim => this.claims.push(claim))
+                // console.log(response.data);
+                response.data.forEach(claim => this.claims.push(
+                    {
+                        id: claim.id,
+                        name: claim.name,
+                        to: claim.claimTo.name,
+                        from: claim.claimFrom.name,
+                        status: claim.claimStatus.name,
+                    })
+                )
             } catch (error) {
-                snack.errorMessage(error)
+                // snack.errorMessage(error)
             }
         },
 

@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface ClaimService {
 
-    List<Claim> getAllClaims();
+    List<Claim> getAll();
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    void update(Claim claim);
+    Claim update(Claim current, Claim updated);
 
     void create(Claim claim);
+
+    Claim getById(Long id);
 }

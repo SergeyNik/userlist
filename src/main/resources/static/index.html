@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vuetify/1.5.16/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <link rel="stylesheet" type="text/css" href="style.css">
 
@@ -42,19 +42,19 @@
                             <v-container grid-list-md>
                                 <v-layout wrap>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.name" label="Номер"></v-text-field>
+                                        <v-text-field v-model="editedItem.id" label="Номер"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.calories" label="Наименование"></v-text-field>
+                                        <v-text-field v-model="editedItem.name" label="Наименование"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.fat" label="Кому"></v-text-field>
+                                        <v-text-field v-model="editedItem.to" label="Кому"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.carbs" label="От кого"></v-text-field>
+                                        <v-text-field v-model="editedItem.from" label="От кого"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.protein" label="Статус"></v-text-field>
+                                        <v-text-field v-model="editedItem.status" label="Статус"></v-text-field>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -77,8 +77,8 @@
                 <template v-slot:items="props">
                     <td>{{ props.item.id }}</td>
                     <td class="text-xs-right">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.whom }}</td>
-                    <td class="text-xs-right">{{ props.item.fwhom }}</td>
+                    <td class="text-xs-right">{{ props.item.to }}</td>
+                    <td class="text-xs-right">{{ props.item.from }}</td>
                     <td class="text-xs-right">{{ props.item.status }}</td>
                     <td class="justify-center layout px-0">
                         <v-icon
@@ -116,9 +116,9 @@
     </v-app>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vuetify@1.5.6/dist/vuetify.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/1.5.16/vuetify.min.js"></script>
 <script type="text/javascript" src="main.js"></script>
 </body>
 </html>

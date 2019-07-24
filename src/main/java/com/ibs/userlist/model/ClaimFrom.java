@@ -23,7 +23,7 @@ public class ClaimFrom {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "claimFrom")
+    @OneToMany(mappedBy = "claimFrom")
     private Set<Claim> claims;
 
 }
