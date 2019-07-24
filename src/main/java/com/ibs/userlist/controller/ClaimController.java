@@ -6,7 +6,6 @@ import com.ibs.userlist.service.ClaimService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,27 +15,19 @@ public class ClaimController {
 
     private final ClaimService claimService;
 
-    private List<Claim> claimList = Arrays.asList(
-            new Claim(1, "Jack", "Frank", true),
-            new Claim(2, "John", "Mike", false),
-            new Claim(3, "Elton", "Sunny", true),
-            new Claim(4, "Razor", "Rich", false)
-    );
-
     @Autowired
     public ClaimController(ClaimService claimService) {
         this.claimService = claimService;
     }
 
-
     @GetMapping
     public List<Claim> claim() {
-        return claimList;
+        return claimService.getAllClaims();
     }
 
     @GetMapping("{id}")
     public Claim getClaim(@PathVariable String id) {
-        return Optional.of(claimList.get(Integer.parseInt(id))).orElseThrow(NotFoundException::new);
+        return Optional.of(claimService.getAllClaims().get(Integer.parseInt(id))).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping
