@@ -61,6 +61,13 @@ public class ClaimServiceImpl implements ClaimService {
         return buildAndSaveClaim(updated, claim);
     }
 
+    /**
+     * Сформировать заявку
+     *
+     * @param updated       Новые данные заявки из dto
+     * @param current       текущая или новая заявка для БД
+     * @return Новая или обновленная сущность заявки
+     */
     private Claim buildAndSaveClaim(Claim updated, Claim current) {
         ClaimTo claimTo = claimToRepo.findById(
                 updated.getClaimTo().getId()).orElseThrow(() -> new NotFoundException("not"));

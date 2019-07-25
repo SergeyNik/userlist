@@ -6,7 +6,6 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vuetify/1.5.16/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <link rel="stylesheet" type="text/css" href="style.css">
 
     <title>User List</title>
     <meta name="description" content="User List">
@@ -17,17 +16,13 @@
     <v-app id="inspire">
 
         <v-toolbar dark color="primary">
-            <v-toolbar-title class="white--text">Заявки</v-toolbar-title>
+            <v-toolbar-title class="white--text">IBS test app</v-toolbar-title>
         </v-toolbar>
 
         <div>
-            <v-toolbar flat color="white">
-                <v-toolbar-title></v-toolbar-title>
-                <v-divider
-                        class="mx-2"
-                        inset
-                        vertical
-                ></v-divider>
+            <v-toolbar flat dark>
+                <v-toolbar-title>Заявки</v-toolbar-title>
+                <v-divider class="mx-2" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="500px">
                     <template v-slot:activator="{ on }">
@@ -42,7 +37,7 @@
                             <v-container grid-list-md>
                                 <v-layout wrap>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.id" label="Номер"></v-text-field>
+                                        <v-text-field v-show="editedIndex > -1" disabled v-model="editedItem.id" label="Номер"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <v-text-field v-model="editedItem.name" label="Наименование"></v-text-field>
@@ -84,7 +79,7 @@
                 </v-dialog>
             </v-toolbar>
 
-            <v-data-table
+            <v-data-table dark
                     :headers="headers"
                     :items="claims"
                     class="elevation-1"

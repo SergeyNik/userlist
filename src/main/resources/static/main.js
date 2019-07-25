@@ -30,26 +30,16 @@ const app = new Vue({
         dialog: false,
         pagination: {},
         rowsPerPageItems: [5, 10, 25],
+
         headers: [
-            {
-                text: 'ID',
-                align: 'left',
-                sortable: false,
-                value: 'id'
-            },
-            { text: 'Наименование', value: 'name', sortable: false },
-            { text: 'Кому', value: 'to', sortable: false },
-            { text: 'От кого', value: 'from', sortable: false },
-            { text: 'Статус', value: 'status', sortable: false },
-            { text: 'Actions', value: 'name', sortable: false }
+            { text: 'ID', align: 'left', sortable: false, value: 'id' },
+            { text: 'Наименование', align: 'right', value: 'name', sortable: false },
+            { text: 'Кому', align: 'right', value: 'to', sortable: false },
+            { text: 'От кого', align: 'right', value: 'from', sortable: false },
+            { text: 'Статус', align: 'right', value: 'status', sortable: false },
+            { text: 'Actions', align: 'center', value: 'name', sortable: false }
         ],
 
-        comboSelect: {
-            to: '',
-            from: '',
-            status: ''
-        },
-        select:'',
         claims: [],
         listTo: [],
         listFrom: [],
@@ -71,7 +61,6 @@ const app = new Vue({
                 name: ''
             },
         },
-
         defaultItem: {
             id: '',
             name: '',
@@ -97,9 +86,7 @@ const app = new Vue({
     },
 
     watch: {
-        dialog (val) {
-            val || this.close()
-        },
+        dialog (val) { val || this.close() },
         pagination: {
             handler () {
                 this.downloadClaims(this.pagination.page - 1, this.pagination.rowsPerPage);
@@ -190,12 +177,12 @@ const app = new Vue({
         },
 
         deleteItem (id) {
-            console.log(id);
             if (confirm('Удалить заявку?')) {
                 this.deleteClaim(id)
                     .then((response) => {
                         const index = this.claims.indexOf(id);
-                        this.claims.splice(index, 1)
+                        this.claims.splice(index, 1);
+                        snack.successMessage('Заявка удалена.')
                     })
                     .catch(function (error) {
                         snack.errorMessage(error);
@@ -204,9 +191,9 @@ const app = new Vue({
         },
 
         close () {
-            this.dialog = false
+            this.dialog = false;
             setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedItem = Object.assign({}, this.defaultItem);
                 this.editedIndex = -1
             }, 300)
         },
@@ -215,7 +202,8 @@ const app = new Vue({
             if (this.editedIndex > -1) {
                 this.updateClaim(this.editedItem.id)
                     .then(function (response) {
-                        Object.assign(this.claims[this.editedIndex], this.editedItem)
+                        Object.assign(this.claims[this.editedIndex], this.editedItem);
+                        snack.successMessage('Заявка успешно обновлена.');
                     })
                     .catch(function (error) {
                         snack.errorMessage(error);
@@ -223,7 +211,8 @@ const app = new Vue({
             } else {
                 this.createClaim()
                     .then((response) => {
-                        this.claims.push(response.data)
+                        this.claims.push(response.data);
+                        snack.successMessage('Заявка успешно создана.');
                     })
                     .catch(function (error) {
                         snack.errorMessage(error);
