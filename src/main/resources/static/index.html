@@ -48,13 +48,28 @@
                                         <v-text-field v-model="editedItem.name" label="Наименование"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.to" label="Кому"></v-text-field>
+                                        <v-combobox
+                                                v-model="editedItem.claimTo"
+                                                :items="listTo"
+                                                item-text="name"
+                                                label="Кому"
+                                        ></v-combobox>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.from" label="От кого"></v-text-field>
+                                        <v-combobox
+                                                v-model="editedItem.claimFrom"
+                                                :items="listFrom"
+                                                item-text="name"
+                                                label="От кого"
+                                        ></v-combobox>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field v-model="editedItem.status" label="Статус"></v-text-field>
+                                        <v-combobox
+                                                v-model="editedItem.claimStatus"
+                                                :items="listStatus"
+                                                item-text="name"
+                                                label="Статус"
+                                        ></v-combobox>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -77,20 +92,20 @@
                 <template v-slot:items="props">
                     <td>{{ props.item.id }}</td>
                     <td class="text-xs-right">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.to }}</td>
-                    <td class="text-xs-right">{{ props.item.from }}</td>
-                    <td class="text-xs-right">{{ props.item.status }}</td>
+                    <td class="text-xs-right">{{ props.item.claimTo.name }}</td>
+                    <td class="text-xs-right">{{ props.item.claimFrom.name }}</td>
+                    <td class="text-xs-right">{{ props.item.claimStatus.name }}</td>
                     <td class="justify-center layout px-0">
                         <v-icon
                                 small
                                 class="mr-2"
-                                @click="editItem(props.item)"
+                                @click="editItem(props.item.id)"
                         >
                             edit
                         </v-icon>
                         <v-icon
                                 small
-                                @click="deleteItem(props.item)"
+                                @click="deleteItem(props.item.id)"
                         >
                             delete
                         </v-icon>

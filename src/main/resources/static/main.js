@@ -1,3 +1,28 @@
+const snack = new Vue({
+    el: '#status',
+    data () {
+        return {
+            snackbar: false,
+            color: 'success',
+            mode: '',
+            timeout: 6000,
+            text: ''
+        }
+    },
+    methods: {
+        successMessage: function(text) {
+            snack.text = text;
+            snack.color = 'success';
+            snack.snackbar = true;
+        },
+        errorMessage: function(text, msg) {
+            snack.color = "error";
+            snack.text = text + msg;
+            snack.snackbar = true;
+        }
+    }
+});
+
 const app = new Vue({
     el: '#app',
     data: () => ({
@@ -16,21 +41,49 @@ const app = new Vue({
             { text: 'Actions', value: 'name', sortable: false }
         ],
 
-        claims: [],
-        editedIndex: -1,
-        editedItem: {
-            id: '',
-            name: '',
+        comboSelect: {
             to: '',
             from: '',
             status: ''
         },
+        select:'',
+        claims: [],
+        listTo: [],
+        listFrom: [],
+        listStatus: [],
+        editedIndex: -1,
+        editedItem: {
+            id: '',
+            name: '',
+            claimTo: {
+                id: '',
+                name: ''
+            },
+            claimFrom: {
+                id: '',
+                name: ''
+            },
+            claimStatus: {
+                id: '',
+                name: ''
+            },
+        },
+
         defaultItem: {
             id: '',
             name: '',
-            to: '',
-            from: '',
-            status: ''
+            claimTo: {
+                id: '',
+                name: ''
+            },
+            claimFrom: {
+                id: '',
+                name: ''
+            },
+            claimStatus: {
+                id: '',
+                name: ''
+            },
         },
 
         responseClaim: {
@@ -54,45 +107,80 @@ const app = new Vue({
     computed: {
         formTitle () {
             return this.editedIndex === -1 ? 'Новая заявка' : 'Редактировать'
-        }
+        },
     },
 
     watch: {
         dialog (val) {
             val || this.close()
-        }
+        },
     },
 
     created () {
-        // this.initialize()
+        this.initialize()
     },
 
     methods: {
         async downloadClaims() {
             try {
                 let response = await axios.get('/claim');
-                // console.log(response.data);
-                response.data.forEach(claim => this.claims.push(
-                    {
-                        id: claim.id,
-                        name: claim.name,
-                        to: claim.claimTo.name,
-                        from: claim.claimFrom.name,
-                        status: claim.claimStatus.name,
-                    })
-                )
+                response.data.forEach(claim => this.claims.push(claim))
             } catch (error) {
-                // snack.errorMessage(error)
+                snack.errorMessage(error)
             }
         },
 
+        async downloadClaimsTo() {
+            try {
+                let response = await axios.get('/list/to');
+                response.data.forEach(to => this.listTo.push(to))
+            } catch (error) {
+                snack.errorMessage(error)
+            }
+        },
+
+        async downloadClaimsFrom() {
+            try {
+                let response = await axios.get('/list/from');
+                response.data.forEach(from => this.listFrom.push(from))
+            } catch (error) {
+                snack.errorMessage(error)
+            }
+        },
+
+        async downloadClaimsStatus() {
+            try {
+                let response = await axios.get('/list/status');
+                response.data.forEach(status => this.listStatus.push(status))
+            } catch (error) {
+                snack.errorMessage(error)
+            }
+        },
+
+        async createClaim() {
+            return await axios.post('/claim', this.editedItem)
+        },
+
+        async updateClaim(id) {
+            return await axios.put(`/claim/${id}`, this.editedItem)
+        },
+
         initialize () {
+            this.downloadClaimsTo();
+            this.downloadClaimsFrom();
+            this.downloadClaimsStatus();
             this.downloadClaims();
         },
 
-        editItem (item) {
-            this.editedIndex = this.claims.indexOf(item)
-            this.editedItem = Object.assign({}, item)
+        editItem (itemId) {
+            this.editedIndex = this.claims.findIndex(function (val) {
+                return val.id === itemId;
+            });
+
+            this.editedItem = this.claims.find(function (val) {
+                return val.id === itemId;
+            });
+
             this.dialog = true
         },
 
@@ -111,36 +199,24 @@ const app = new Vue({
 
         save () {
             if (this.editedIndex > -1) {
-                Object.assign(this.claims[this.editedIndex], this.editedItem)
+                this.updateClaim(this.editedItem.id)
+                    .then(function (response) {
+                        Object.assign(this.claims[this.editedIndex], this.editedItem)
+                    })
+                    .catch(function (error) {
+                        snack.errorMessage(error);
+                    });
             } else {
-                this.claims.push(this.editedItem)
+                this.createClaim()
+                    .then((response) => {
+                        this.claims.push(response.data)
+                    })
+                    .catch(function (error) {
+                        snack.errorMessage(error);
+                    });
             }
+            console.log(this.claims);
             this.close()
-        }
-    }
-});
-
-const snack = new Vue({
-    el: '#status',
-    data () {
-        return {
-            snackbar: false,
-            color: 'success', // or error
-            mode: '',
-            timeout: 6000,
-            text: ''
-        }
-    },
-    methods: {
-        successMessage: function(text) {
-            snack.text = text;
-            snack.color = 'success';
-            snack.snackbar = true;
-        },
-        errorMessage: function(text, msg) {
-            snack.color = "error";
-            snack.text = text + msg;
-            snack.snackbar = true;
         }
     }
 });

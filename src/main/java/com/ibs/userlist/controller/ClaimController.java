@@ -39,37 +39,29 @@ public class ClaimController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ClaimDto> getClaim(@PathVariable Long id) {
+    public ResponseEntity<ClaimDto> getClaim(@PathVariable long id) {
         Claim claim = claimService.getById(id);
         return ResponseEntity.ok(modelMapper.map(claim, ClaimDto.class));
     }
 
-    @PostMapping(params = {"id"})
-    public void create(@RequestParam("id") Long id,
-                       @Valid @RequestBody ClaimDto claimDto) {
+    @PostMapping
+    public ResponseEntity<ClaimDto> create(@Valid @RequestBody ClaimDto claimDto) {
 
-//        claimService.create(claim);
+        Claim claim = claimService.create(modelMapper.map(claimDto, Claim.class));
+        return ResponseEntity.ok(modelMapper.map(claim, ClaimDto.class));
     }
 
-    @PutMapping
-    public ResponseEntity<ClaimDto> update(@PathVariable Long id,
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ClaimDto> update(@PathVariable long id,
                                            @Valid @RequestBody ClaimDto claimDto) {
 
-        Claim claim = claimService.getById(id);
-        Claim updatedClaim = claimService.update(claim, modelMapper.map(claimDto, Claim.class));
-
+        Claim updatedClaim = claimService.update(id, modelMapper.map(claimDto, Claim.class));
         return ResponseEntity.ok(modelMapper.map(updatedClaim, ClaimDto.class));
     }
 
-    @DeleteMapping("{id}")
-    public void deleteBook(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteBook(@RequestParam("id") long id) {
         claimService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
-
-//    @DeleteMapping
-//    public ResponseEntity<Void> delete(@RequestParam("id") long id) {
-//        articleService.markArticleAsDeleted(id);
-//
-//        return ResponseEntity.ok().build();
-//    }
 }
