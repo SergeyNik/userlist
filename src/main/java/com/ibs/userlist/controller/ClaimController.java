@@ -27,15 +27,16 @@ public class ClaimController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClaimDto>> getAllClaims() {
-        List<Claim> allClaims = claimService.getAll();
-        List<ClaimDto> allClaimsDto =
-                allClaims
+    public ResponseEntity<List<ClaimDto>> getAllClaims(@RequestParam("page") int page,
+                                                       @RequestParam("size") int size) {
+        List<Claim> claimsOnPage = claimService.getClaimsByCount(page, size);
+        List<ClaimDto> claimsDto =
+                claimsOnPage
                         .stream()
                         .map(source -> modelMapper.map(source, ClaimDto.class))
                         .collect(Collectors.toList());
 
-        return ResponseEntity.ok(allClaimsDto);
+        return ResponseEntity.ok(claimsDto);
     }
 
     @GetMapping(value = "/{id}")

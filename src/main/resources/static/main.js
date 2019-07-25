@@ -26,7 +26,10 @@ const snack = new Vue({
 const app = new Vue({
     el: '#app',
     data: () => ({
+        totalItems: 0,
         dialog: false,
+        pagination: {},
+        rowsPerPageItems: [5, 10, 25],
         headers: [
             {
                 text: 'ID',
@@ -34,10 +37,10 @@ const app = new Vue({
                 sortable: false,
                 value: 'id'
             },
-            { text: 'Наименование', value: 'name' },
-            { text: 'Кому', value: 'to' },
-            { text: 'От кого', value: 'from' },
-            { text: 'Статус', value: 'status' },
+            { text: 'Наименование', value: 'name', sortable: false },
+            { text: 'Кому', value: 'to', sortable: false },
+            { text: 'От кого', value: 'from', sortable: false },
+            { text: 'Статус', value: 'status', sortable: false },
             { text: 'Actions', value: 'name', sortable: false }
         ],
 
@@ -85,23 +88,6 @@ const app = new Vue({
                 name: ''
             },
         },
-
-        responseClaim: {
-            id: '',
-            name: 0,
-            claimFrom: {
-                id: 0,
-                name: ''
-            },
-            claimTo: {
-                id: 0,
-                name: ''
-            },
-            claimStatus: {
-                id: 0,
-                name: ''
-            }
-        },
     }),
 
     computed: {
@@ -114,6 +100,12 @@ const app = new Vue({
         dialog (val) {
             val || this.close()
         },
+        pagination: {
+            handler () {
+                this.downloadClaims(this.pagination.page - 1, this.pagination.rowsPerPage);
+            },
+            deep: true
+        },
     },
 
     created () {
@@ -121,10 +113,10 @@ const app = new Vue({
     },
 
     methods: {
-        async downloadClaims() {
+        async downloadClaims(page, size) {
             try {
-                let response = await axios.get('/claim');
-                response.data.forEach(claim => this.claims.push(claim))
+                let response = await axios.get('/claim',  { params: { page: page , size: size} });
+                this.claims = response.data
             } catch (error) {
                 snack.errorMessage(error)
             }
@@ -133,7 +125,7 @@ const app = new Vue({
         async downloadClaimsTo() {
             try {
                 let response = await axios.get('/list/to');
-                response.data.forEach(to => this.listTo.push(to))
+                this.listTo = response.data
             } catch (error) {
                 snack.errorMessage(error)
             }
@@ -142,7 +134,7 @@ const app = new Vue({
         async downloadClaimsFrom() {
             try {
                 let response = await axios.get('/list/from');
-                response.data.forEach(from => this.listFrom.push(from))
+                this.listFrom = response.data
             } catch (error) {
                 snack.errorMessage(error)
             }
@@ -151,7 +143,16 @@ const app = new Vue({
         async downloadClaimsStatus() {
             try {
                 let response = await axios.get('/list/status');
-                response.data.forEach(status => this.listStatus.push(status))
+                this.listStatus = response.data
+            } catch (error) {
+                snack.errorMessage(error)
+            }
+        },
+
+        async countAllClaims() {
+            try {
+                let response = await axios.get('/list/count');
+                this.totalItems = response.data
             } catch (error) {
                 snack.errorMessage(error)
             }
@@ -166,10 +167,10 @@ const app = new Vue({
         },
 
         initialize () {
+            this.countAllClaims();
             this.downloadClaimsTo();
             this.downloadClaimsFrom();
             this.downloadClaimsStatus();
-            this.downloadClaims();
         },
 
         editItem (itemId) {

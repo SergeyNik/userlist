@@ -1,6 +1,5 @@
 package com.ibs.userlist.controller;
 
-import com.ibs.userlist.dto.ClaimDto;
 import com.ibs.userlist.dto.ClaimFromDto;
 import com.ibs.userlist.dto.ClaimStatusDto;
 import com.ibs.userlist.dto.ClaimToDto;
@@ -66,5 +65,11 @@ public class DirectoryController {
                         .collect(Collectors.toList());
 
         return ResponseEntity.ok(listStatusDto);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getClaimsQuantity() {
+        long claimsQuantity = claimService.getClaimsQuantity();
+        return ResponseEntity.ok(claimsQuantity);
     }
 }

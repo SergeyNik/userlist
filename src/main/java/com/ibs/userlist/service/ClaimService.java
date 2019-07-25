@@ -9,7 +9,14 @@ import java.util.List;
 
 public interface ClaimService {
 
-    List<Claim> getAll();
+    /**
+     * Получить заявки по количеству
+     *
+     * @param page       Номер страницы
+     * @param size       Количество записей
+     * @return Список заявок на страницу
+     */
+    List<Claim> getClaimsByCount(int page, int size);
 
     void deleteById(long id);
 
@@ -24,4 +31,6 @@ public interface ClaimService {
     List<ClaimFrom> getAllClaimFrom();
 
     List<ClaimStatus> getAllClaimStatus();
+
+    long getClaimsQuantity();
 }

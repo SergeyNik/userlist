@@ -88,6 +88,8 @@
                     :headers="headers"
                     :items="claims"
                     class="elevation-1"
+                    :pagination.sync="pagination"
+                    :total-items="totalItems"
             >
                 <template v-slot:items="props">
                     <td>{{ props.item.id }}</td>

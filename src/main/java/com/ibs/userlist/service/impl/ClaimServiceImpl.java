@@ -11,10 +11,13 @@ import com.ibs.userlist.repository.ClaimStatusRepo;
 import com.ibs.userlist.repository.ClaimToRepo;
 import com.ibs.userlist.service.ClaimService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClaimServiceImpl implements ClaimService {
@@ -35,14 +38,14 @@ public class ClaimServiceImpl implements ClaimService {
         this.claimStatusRepo = claimStatusRepo;
     }
 
-    @Override
-    public List<Claim> getAll() {
-        return claimRepository.findAll();
+    public List<Claim> getClaimsByCount(int page, int size) {
+        Page<Claim> claims = claimRepository.findAll(PageRequest.of(page, size));
+        return claims.get().collect(Collectors.toList());
     }
 
     @Override
     public Claim getById(long id) {
-        return claimRepository.findById(id).orElseThrow(NotFoundException::new);
+        return claimRepository.findById(id).orElseThrow(() -> new NotFoundException("not"));
     }
 
     @Override
@@ -60,11 +63,11 @@ public class ClaimServiceImpl implements ClaimService {
 
     private Claim buildAndSaveClaim(Claim updated, Claim current) {
         ClaimTo claimTo = claimToRepo.findById(
-                updated.getClaimTo().getId()).orElseThrow(NotFoundException::new);
+                updated.getClaimTo().getId()).orElseThrow(() -> new NotFoundException("not"));
         ClaimFrom claimFrom = claimFromRepo.findById(
-                updated.getClaimFrom().getId()).orElseThrow(NotFoundException::new);
+                updated.getClaimFrom().getId()).orElseThrow(() -> new NotFoundException("not"));
         ClaimStatus claimStatus = claimStatusRepo.findById(
-                updated.getClaimStatus().getId()).orElseThrow(NotFoundException::new);
+                updated.getClaimStatus().getId()).orElseThrow(() -> new NotFoundException("not"));
 
         current.setName(updated.getName());
         current.setClaimTo(claimTo);
@@ -92,6 +95,11 @@ public class ClaimServiceImpl implements ClaimService {
     @Override
     public List<ClaimStatus> getAllClaimStatus() {
         return claimStatusRepo.findAll();
+    }
+
+    @Override
+    public long getClaimsQuantity() {
+        return claimRepository.count();
     }
 
 }
