@@ -60,8 +60,8 @@ public class ClaimController {
         return ResponseEntity.ok(modelMapper.map(updatedClaim, ClaimDto.class));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteBook(@RequestParam("id") long id) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable long id) {
         claimService.deleteById(id);
         return ResponseEntity.ok().build();
     }

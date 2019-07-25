@@ -158,6 +158,10 @@ const app = new Vue({
             }
         },
 
+        async deleteClaim(id) {
+            return await axios.delete(`/claim/${id}`);
+        },
+
         async createClaim() {
             return await axios.post('/claim', this.editedItem)
         },
@@ -185,9 +189,18 @@ const app = new Vue({
             this.dialog = true
         },
 
-        deleteItem (item) {
-            const index = this.claims.indexOf(item)
-            confirm('Are you sure you want to delete this item?') && this.claims.splice(index, 1)
+        deleteItem (id) {
+            console.log(id);
+            if (confirm('Удалить заявку?')) {
+                this.deleteClaim(id)
+                    .then((response) => {
+                        const index = this.claims.indexOf(id);
+                        this.claims.splice(index, 1)
+                    })
+                    .catch(function (error) {
+                        snack.errorMessage(error);
+                    });
+            }
         },
 
         close () {
