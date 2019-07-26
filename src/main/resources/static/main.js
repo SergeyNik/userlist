@@ -17,7 +17,7 @@ const snack = new Vue({
         },
         errorMessage: function(text, msg) {
             snack.color = "error";
-            snack.text = text + msg;
+            snack.text = text + ' ' + msg;
             snack.snackbar = true;
         }
     }
@@ -31,13 +31,20 @@ const app = new Vue({
         pagination: {},
         rowsPerPageItems: [5, 10, 25],
 
+        rules: {
+            name: [val => (val || '').length > 0 || 'Необходимо заполнить'],
+            to: [val => (val.name || '').length > 0 || 'Необходимо заполнить'],
+            from: [val => (val.name || '').length > 0 || 'Необходимо заполнить'],
+            status: [val => (val.name || '').length > 0 || 'Необходимо заполнить']
+        },
+
         headers: [
             { text: 'ID', align: 'left', sortable: false, value: 'id' },
             { text: 'Наименование', align: 'right', value: 'name', sortable: false },
             { text: 'Кому', align: 'right', value: 'to', sortable: false },
             { text: 'От кого', align: 'right', value: 'from', sortable: false },
             { text: 'Статус', align: 'right', value: 'status', sortable: false },
-            { text: 'Actions', align: 'center', value: 'name', sortable: false }
+            { text: 'Actions', align: 'center', value: 'action', sortable: false }
         ],
 
         claims: [],
@@ -83,6 +90,12 @@ const app = new Vue({
         formTitle () {
             return this.editedIndex === -1 ? 'Новая заявка' : 'Редактировать'
         },
+        formIsValid () {
+            return this.editedItem.name === ''
+                || this.editedItem.claimTo.id === ''
+                || this.editedItem.claimFrom.id === ''
+                || this.editedItem.claimStatus.id === ''
+        }
     },
 
     watch: {
@@ -169,9 +182,11 @@ const app = new Vue({
                 return val.id === itemId;
             });
 
-            this.editedItem = this.claims.find(function (val) {
+            let claim = this.claims.find(function (val) {
                 return val.id === itemId;
             });
+
+            this.editedItem = Object.assign({}, claim);
 
             this.dialog = true
         },
@@ -180,7 +195,9 @@ const app = new Vue({
             if (confirm('Удалить заявку?')) {
                 this.deleteClaim(id)
                     .then((response) => {
-                        const index = this.claims.indexOf(id);
+                        const index = this.claims.findIndex(function (val) {
+                            return val.id === id;
+                        });
                         this.claims.splice(index, 1);
                         snack.successMessage('Заявка удалена.')
                     })
@@ -201,12 +218,12 @@ const app = new Vue({
         save () {
             if (this.editedIndex > -1) {
                 this.updateClaim(this.editedItem.id)
-                    .then(function (response) {
+                    .then((response) => {
                         Object.assign(this.claims[this.editedIndex], this.editedItem);
                         snack.successMessage('Заявка успешно обновлена.');
                     })
                     .catch(function (error) {
-                        snack.errorMessage(error);
+                        snack.errorMessage('Ошибка! ', error.response.data.message);
                     });
             } else {
                 this.createClaim()
@@ -218,7 +235,6 @@ const app = new Vue({
                         snack.errorMessage(error);
                     });
             }
-            console.log(this.claims);
             this.close()
         }
     }

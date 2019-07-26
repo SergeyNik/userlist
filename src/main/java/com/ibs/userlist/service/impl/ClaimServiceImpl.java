@@ -45,7 +45,7 @@ public class ClaimServiceImpl implements ClaimService {
 
     @Override
     public Claim getById(long id) {
-        return claimRepository.findById(id).orElseThrow(() -> new NotFoundException("not"));
+        return claimRepository.findById(id).orElseThrow(() -> new NotFoundException("Заявка не найдена"));
     }
 
     @Override
@@ -70,11 +70,11 @@ public class ClaimServiceImpl implements ClaimService {
      */
     private Claim buildAndSaveClaim(Claim updated, Claim current) {
         ClaimTo claimTo = claimToRepo.findById(
-                updated.getClaimTo().getId()).orElseThrow(() -> new NotFoundException("not"));
+                updated.getClaimTo().getId()).orElseThrow(() -> new NotFoundException("Не найден получатель заявки"));
         ClaimFrom claimFrom = claimFromRepo.findById(
-                updated.getClaimFrom().getId()).orElseThrow(() -> new NotFoundException("not"));
+                updated.getClaimFrom().getId()).orElseThrow(() -> new NotFoundException("Не найден отправитель заявки"));
         ClaimStatus claimStatus = claimStatusRepo.findById(
-                updated.getClaimStatus().getId()).orElseThrow(() -> new NotFoundException("not"));
+                updated.getClaimStatus().getId()).orElseThrow(() -> new NotFoundException("Не найден статус заявки"));
 
         current.setName(updated.getName());
         current.setClaimTo(claimTo);

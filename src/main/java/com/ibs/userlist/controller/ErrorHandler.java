@@ -19,7 +19,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<ErrorResponse> handleIncorrectCoordsException(RuntimeException e) {
+    public final ResponseEntity<ErrorResponse> handleNotFoundException(RuntimeException e) {
+        log.error(e.getMessage(), e);
         return buildResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
