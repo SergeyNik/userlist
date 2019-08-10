@@ -23,6 +23,7 @@ public class ClaimController {
 
     private final ModelMapper modelMapper;
 
+    @CrossOrigin
     @ApiOperation(value = "Получить заявки по страницам", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
