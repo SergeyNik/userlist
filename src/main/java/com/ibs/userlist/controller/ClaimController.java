@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(maxAge = 3600)
 @Api(value="Контроллер для управления заявками")
 @RequiredArgsConstructor
 @RestController
