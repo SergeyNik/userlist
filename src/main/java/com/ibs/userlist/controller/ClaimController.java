@@ -41,6 +41,7 @@ public class ClaimController {
         return ResponseEntity.ok(claimsDto);
     }
 
+    @CrossOrigin
     @ApiOperation(value = "Получить заявку по идентификатору", response = ClaimDto.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Заявка получена"),
