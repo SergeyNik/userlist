@@ -1,4 +1,4 @@
-package com.ibs.userlist.controller;
+package com.ibs.userlist.controller.rest;
 
 import com.ibs.userlist.dto.ClaimDto;
 import com.ibs.userlist.model.Claim;
