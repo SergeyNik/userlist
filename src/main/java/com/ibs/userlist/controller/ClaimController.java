@@ -5,6 +5,7 @@ import com.ibs.userlist.model.Claim;
 import com.ibs.userlist.service.ClaimService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public class ClaimController {
     @GetMapping
     public ResponseEntity<List<ClaimDto>> getAllClaims(@RequestParam("page") int page,
                                                        @RequestParam("size") int size) {
-        List<Claim> claimsOnPage = claimService.getClaimsByCount(page, size);
-        List<ClaimDto> claimsDto =
+        val claimsOnPage = claimService.getClaimsByCount(page, size);
+        val claimsDto =
                 claimsOnPage
                         .stream()
                         .map(source -> modelMapper.map(source, ClaimDto.class))
@@ -50,7 +51,7 @@ public class ClaimController {
     public ResponseEntity<ClaimDto> getClaim(
             @ApiParam(value = "Id заявки", required = true)
             @PathVariable long id) {
-        Claim claim = claimService.getById(id);
+        val claim = claimService.getById(id);
         return ResponseEntity.ok(modelMapper.map(claim, ClaimDto.class));
     }
 
@@ -59,7 +60,7 @@ public class ClaimController {
     public ResponseEntity<ClaimDto> create(
             @ApiParam(value = "Данные новой заявки", required = true) @Valid @RequestBody ClaimDto claimDto) {
 
-        Claim claim = claimService.create(modelMapper.map(claimDto, Claim.class));
+        val claim = claimService.create(modelMapper.map(claimDto, Claim.class));
         return ResponseEntity.ok(modelMapper.map(claim, ClaimDto.class));
     }
 
@@ -71,7 +72,7 @@ public class ClaimController {
             @ApiParam(value = "Данные для обновления заявки", required = true)
             @Valid @RequestBody ClaimDto claimDto) {
 
-        Claim updatedClaim = claimService.update(id, modelMapper.map(claimDto, Claim.class));
+        val updatedClaim = claimService.update(id, modelMapper.map(claimDto, Claim.class));
         return ResponseEntity.ok(modelMapper.map(updatedClaim, ClaimDto.class));
     }
 
